@@ -19,28 +19,28 @@ export const createElement = (tagName: string, options: any) => {
     tagName,
     ...options,
     componentID:
-      options?.attributes?.find((attribute) => attribute.attributeName === 'componentid')
+      options?.attributes?.find((attribute: any) => attribute.attributeName === 'componentid')
         ?.attributeValue || compID
   }
 }
-export const createText = (tagText) => {
+export const createText = (tagText: string) => {
   return { contentType: 'text', tagText }
 }
-export const createAttribute = (attributeName, attributeValue: any = true) => {
+export const createAttribute = (attributeName: string, attributeValue: any = true) => {
   return { attributeName, attributeValue }
 }
-export const isFoundObj = (obj, val) => {
+export const isFoundObj = (obj: any, val: string) => {
   if (obj.componentID == val) {
     return obj
   } else if (obj.contentType == 'element' && obj.children) {
     for (let i = 0; i < obj.children.length; i++) {
-      const found = isFoundObj(obj.children[i], val)
+      const found = isFoundObj(obj.children[i], val) as any
       if (found) return found
     }
   }
 }
-export const createStyleGrouping = (items, selectedID) => {
-  const styleable = document.querySelector(`[componentID='${selectedID}']`)
+export const createStyleGrouping = (items: any, selectedID: string) => {
+  const styleable = document.querySelector(`[componentID='${selectedID}']`) as any
   const commonStyleGroups = [
     'animation',
     'background',
@@ -82,7 +82,7 @@ export const createStyleGrouping = (items, selectedID) => {
     'translate',
     'zoom'
   ]
-  return items.reduce((styleDefinitions, styleAttribute) => {
+  return items.reduce((styleDefinitions: any, styleAttribute: string) => {
     const commonGroup = commonStyleGroups.find((group) => styleAttribute.startsWith(group))
     if (commonGroup) {
       if (!styleDefinitions[commonGroup]) styleDefinitions[commonGroup] = {}
@@ -96,9 +96,6 @@ export const createStyleGrouping = (items, selectedID) => {
     } else if (displayAttributes.includes(styleAttribute)) {
       if (!styleDefinitions.display) styleDefinitions.display = {}
       styleDefinitions.display[styleAttribute] = styleable.style[styleAttribute]
-    } else if (sizeAttributes.includes(styleAttribute)) {
-      if (!styleDefinitions.size) styleDefinitions.size = {}
-      styleDefinitions.size[styleAttribute] = styleable.style[styleAttribute]
     } else if (flexAndGrid.find((group) => styleAttribute.startsWith(group))) {
       if (!styleDefinitions.flex) styleDefinitions.flex = {}
       if (!styleDefinitions.grid) styleDefinitions.grid = {}
@@ -144,11 +141,11 @@ export const rgbToHex = (rgbString: string) => {
   return hexString
 }
 
-export const buildElement = ({ tagName, children, attributes, componentID }, parentElement) => {
+export const buildElement = ({ tagName, children, attributes, componentID }: any, parentElement: any) => {
   const newElement = document.createElement(tagName);
   newElement.setAttribute("componentID", componentID)
   if (attributes) {
-      attributes.forEach(({ attributeName, attributeValue }) => {
+      attributes.forEach(({ attributeName, attributeValue }: any) => {
           newElement.setAttribute(
               attributeName,
               attributeValue ? attributeValue : true
@@ -156,17 +153,17 @@ export const buildElement = ({ tagName, children, attributes, componentID }, par
       });
   }
   if (children) {
-      children.forEach((child) => {
+      children.forEach((child: any) => {
           buildUI(child, newElement);
       });
   }
   return parentElement.appendChild(newElement);
 }
-export const buildText = ({ tagText }, parentElement) => {
+export const buildText = ({ tagText }: any, parentElement: any) => {
   const newElement = document.createTextNode(tagText);
   return parentElement.appendChild(newElement);
 }
-export const buildUI = (element, parentElement) => {
+export const buildUI = (element: any, parentElement: any) => {
   const { contentType } = element;
   return contentType === "element"
       ? buildElement(element, parentElement)
@@ -174,7 +171,7 @@ export const buildUI = (element, parentElement) => {
 }
 
 // Default Element Constructors
-export const createInputUI = (elementMarkdown) => {
+export const createInputUI = (elementMarkdown: any) => {
   switch (elementMarkdown.variantType) {
     case "text":
       return createElement("input", {
@@ -272,7 +269,7 @@ export const createInputUI = (elementMarkdown) => {
       });
   }
 };
-export const createTextUI = (elementMarkdown) => {
+export const createTextUI = (elementMarkdown: any) => {
   switch (elementMarkdown.variantType) {
     case "a":
       return createElement(elementMarkdown.variantType, {
@@ -294,7 +291,7 @@ export const createTextUI = (elementMarkdown) => {
       });
   }
 };
-export const createMediaUI = (elementMarkdown) => {
+export const createMediaUI = (elementMarkdown: any) => {
   // if (mediaType === "video") return createElement()
   if (elementMarkdown.variantType === "img")
     return createElement("img", {
@@ -310,7 +307,7 @@ export const createMediaUI = (elementMarkdown) => {
 };
 
 // Handle element creation from the form
-export const generateUI = (elementMarkdown) => {
+export const generateUI = (elementMarkdown: any) => {
   if (elementMarkdown.elementType === "input")
     return createInputUI(elementMarkdown);
   if (elementMarkdown.elementType === "text")
@@ -319,8 +316,8 @@ export const generateUI = (elementMarkdown) => {
     return createMediaUI(elementMarkdown);
 };
 // Handle Section creation from the form
-export const generateSection = (sectionMarkdown) => {
-  let boxes = [];
+export const generateSection = (sectionMarkdown: any) => {
+  const boxes = [];
   // let amtBoxes = sectionMarkdown.rows * sectionMarkdown.cols
 
   for (let i = 0; i < sectionMarkdown.cols; i++) {
@@ -360,8 +357,8 @@ function hasTextChild(element: Element) {
   return false;
 }
 
-export const createMarkdownForElement = (tagName, element) => {
-  const children = element.children?.length
+export const createMarkdownForElement = (tagName: string, element: Element) => {
+  const children: any[] = element.children?.length
     ? Array.from(element.children).map((child) =>
         createMarkdownForElement(child.tagName.toLowerCase(), child)
       )
@@ -374,6 +371,6 @@ export const createMarkdownForElement = (tagName, element) => {
         })
         .filter((attribute) => attribute)
     : [];
-  if (hasTextChild(element)) children.push(createText(element.textContent));
+  if (hasTextChild(element) && element.textContent) children.push(createText(element.textContent));
   return createElement(tagName, { children, attributes });
 };
