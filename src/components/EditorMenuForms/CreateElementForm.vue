@@ -40,7 +40,7 @@ import { buildUI, generateUI } from '@/lib/helpers';
 import { usePageDataStore } from '@/stores/pageData.store'
 const PageDataStore = usePageDataStore()
 const { selectedComponentID } = storeToRefs(PageDataStore)
-const newElementType = ref(null)
+const newElementType = ref("" as string)
 const newElementVariant = ref(null)
 const newElementValues = ref({} as any)
 const props = defineProps({

@@ -6,8 +6,8 @@
         <UpdateStyleInput
           v-for="(attributeValue, attributeName) in styleGroup"
           :key="attributeName"
-          :style-name="attributeName"
-          :style-value="attributeValue"
+          :styleName="(attributeName as string)"
+          :styleValue="attributeValue"
         />
       </AccordionComponent>
     </AccordionComponent>

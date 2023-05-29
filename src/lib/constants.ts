@@ -88,4 +88,4 @@ export const elementTypes = {
           text: ""
       }
   }
-}
+} as any
