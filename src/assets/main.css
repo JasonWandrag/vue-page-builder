@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: sans-serif;
+  color: #333;
+}
+
+select:empty {
+  display: none;
+}
+
+[hovering] {
+  animation: selectionOutline 1s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+@keyframes selectionOutline {
+  0% {
+    outline: 1px solid white;
+  }
+  50% {
+    outline: 1px solid black;
+  }
+  100% {
+    outline: 1px solid white;
+  }
+}
